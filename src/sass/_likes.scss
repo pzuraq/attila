@@ -1,0 +1,186 @@
+.post-likes {
+  font-size: 0.8em;
+  font-family: 'Fira Sans', sans-serif;
+  text-align: center;
+
+  input[type=checkbox] {
+    clear: both;
+    display: none;
+  }
+
+  input[type="checkbox"] {
+    display: none;
+  }
+
+  input[type="checkbox"] + label {
+    text-align: center;
+    display: inline-block;
+    position: relative;
+
+    .like-icon {
+      position: relative;
+      z-index: 100;
+      height: 6em;
+      width: 6em;
+      margin-bottom: -2em;
+      display: block;
+      text-align: center;
+      line-height: 6em;
+      cursor: pointer;
+      -webkit-transition: all 300ms ease;
+      transition: all 300ms ease;
+
+      &:before,
+      &:after {
+        content: '';
+        z-index: -1;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        top: 0;
+        left: 0;
+        transform: scale(0);
+        -webkit-ransform: scale(0);
+      }
+
+      &:before {
+        background: #BEA4FF;
+      }
+
+      &:after {
+        background: white;
+      }
+
+      svg {
+        position: absolute;
+        top: calc(50% - 1.8em);
+        right: calc(50% - 1.8em);
+
+        filter: grayscale(100%);
+        display: inline-flex;
+        vertical-align: middle;
+        width: 3em;
+      }
+
+      .confetti {
+        opacity: 0;
+      }
+
+      &:hover {
+        svg {
+          filter: grayscale(0);
+        }
+      }
+    }
+
+    .like-text {
+      &:before {
+        content: 'No likes yet :(';
+      }
+      &:after {
+        content: ''
+      }
+      font-size: 0.8em;
+      user-select: none;
+      position: relative;
+      top: 0;
+      left: -0.1em;
+    }
+  }
+
+  input[type="checkbox"]:checked + label {
+    .like-icon {
+      svg {
+        transition: all 300ms ease-in-out;
+        transform: scale(1.3);
+        filter: grayscale(0);
+      }
+
+      &:after {
+        animation: like-b 0.6s 0.2s forwards;
+      }
+
+      &:before {
+        animation: like-a 1s 0s forwards;
+      }
+
+      .confetti {
+        opacity: 1;
+      }
+    }
+
+    .like-text {
+      &:before {
+        content: '1 like';
+      }
+      animation: like-text 0.8s 0s forwards;
+      top: 0.5em;
+      opacity: 1;
+    }
+
+    &:after {
+      content: 'Thanks!';
+      animation: thank-you 1s 0s forwards;
+      background-color: $color-blue-60;
+      color: white;
+      border-radius: 1em;
+      padding: 0em 0.75em;
+      position: absolute;
+      top: -0.5em;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: thank-you 1.2s 0s forwards;
+      z-index: 100;
+    }
+  }
+
+  @keyframes like-text {
+    0% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 0;
+    }
+    100% {
+      top: 0.5em;
+      opacity: 1;
+    }
+  }
+
+  @keyframes thank-you {
+    0% {
+      opacity: 0;
+    }
+    8% {
+      opacity: 0;
+    }
+    30% {
+      opacity: 1;
+    }
+    100% {
+      top: -2em;
+      opacity: 0;
+    }
+  }
+
+  @keyframes like-a {
+    50% {
+      transform: scale(1.1);
+    }
+    51% {
+      transform: scale(0);
+    }
+  }
+
+  @keyframes like-b {
+    50% {
+      transform: scale(1.11);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1.11);
+      opacity: 0;
+    }
+  }
+}

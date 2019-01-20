@@ -1,159 +1,140 @@
-jQuery(function($) {
+import '../sass/style.scss';
 
-	var body = $('body');
-	var html = $('html');
-	var viewport = $(window);
+var body = document.querySelector('body');
+var html = document.querySelector('html');
+var viewport = window;
 
-	/* ==========================================================================
-	   Menu
-	   ========================================================================== */
+/* ==========================================================================
+	 Menu
+	 ========================================================================== */
 
-	function menu() {
-		html.toggleClass('menu-active');
-	};
-
-	$('#menu').on({
-		'click': function() {
-			menu();
-		}
+function menu() {
+	var menuElements = document.querySelectorAll('#menu, .menu-button, .hidden-close');
+	menuElements.forEach(function(menuElement) {
+		menuElement.addEventListener('click', function() {
+			html.toggleClass('menu-active');
+		})
 	});
+}
+menu();
 
-	$('.menu-button').on({
-		'click': function() {
-			menu();
-		}
-	});
+/* ==========================================================================
+	 Parallax cover
+	 ========================================================================== */
 
-	$('.hidden-close').on({
-		'click': function() {
-			menu();
-		}
-	});
+var cover = document.querySelector('.cover');
+var coverPosition = 0;
 
-	/* ==========================================================================
-	   Parallax cover
-	   ========================================================================== */
+function prlx() {
+	if(cover.length >= 1) {
+		var windowPosition = html.scrollTop;
+		coverPosition = windowPosition > 0 ? Math.floor(windowPosition * 0.25) : 0;
 
-	var cover = $('.cover');
-	var coverPosition = 0;
+		cover.style['-webkit-transform'] = 'translate3d(0, ' + coverPosition + 'px, 0)';
+		cover.style['transform'] = 'translate3d(0, ' + coverPosition + 'px, 0)'
 
-	function prlx() {
-		if(cover.length >= 1) {
-			var windowPosition = viewport.scrollTop();
-			(windowPosition > 0) ? coverPosition = Math.floor(windowPosition * 0.25) : coverPosition = 0;
-			cover.css({
-				'-webkit-transform' : 'translate3d(0, ' + coverPosition + 'px, 0)',
-				'transform' : 'translate3d(0, ' + coverPosition + 'px, 0)'
-			});
-			(viewport.scrollTop() < cover.height()) ? html.addClass('cover-active') : html.removeClass('cover-active');
+		if (html.scrollTop < cover.offsetHeight) {
+			html.classList.add('cover-active');
+		} else {
+			html.classList.remove('cover-active');
 		}
 	}
-	prlx();
+}
+prlx();
 
-	viewport.on({
-		'scroll': function() {
-			prlx();
-		},
-		'resize': function() {
-			prlx();
-		},
-		'orientationchange': function() {
-			prlx();
-		}
-	});
+window.addEventListener('scroll', prlx);
+window.addEventListener('resize', prlx);
+window.addEventListener('orientationChange', prlx);
 
-	/* ==========================================================================
-	   Reading Progress
-	   ========================================================================== */
+/* ==========================================================================
+		Reading Progress
+		========================================================================== */
 
-	var post = $('.post-content');
+var post = document.querySelector('.post-content');
+var progressBar = document.querySelector('.progress-bar');
+var progressContainer = document.querySelector('.progress-container');
 
-	function readingProgress() {
-		if(post.length >= 1) {
-			var postBottom = post.offset().top + post.height();
-			var windowBottom = viewport.scrollTop() + viewport.height();
-			var progress = 100 - (((postBottom - windowBottom) / (postBottom - viewport.height())) * 100);
-			$('.progress-bar').css('width', progress + '%');
-			(progress > 100) ? $('.progress-container').addClass('ready') : $('.progress-container').removeClass('ready');
+function readingProgress() {
+	if (post) {
+		var postBottom = post.getBoundingClientRect().bottom;
+		var windowBottom = html.scrollTop + html.offsetHeight;
+		var progress = 100 - ((postBottom - windowBottom) / (postBottom - html.offsetHeight) * 100);
+
+		progressBar.style['width'] = progress + '%';
+
+		if (progress > 100) {
+			progressContainer.classList.add('ready');
+		} else {
+			progressContainer.classList.remove('ready');
 		}
 	}
-	readingProgress();
+}
+readingProgress();
 
-	viewport.on({
-		'scroll': function() {
-			readingProgress();
-		},
-		'resize': function() {
-			readingProgress();
-		},
-		'orientationchange': function() {
-			readingProgress();
-		}
+window.addEventListener('scroll', readingProgress);
+window.addEventListener('resize', readingProgress);
+window.addEventListener('orientationChange', readingProgress);
+
+/* ==========================================================================
+		Gallery
+		========================================================================== */
+
+function gallery() {
+	var images = document.querySelectorAll('.kg-gallery-image img');
+	images.forEach(function (image) {
+		var container = image.closest('.kg-gallery-image');
+		var width = image.attributes.width.value;
+		var height = image.attributes.height.value;
+		var ratio = width / height;
+		container.style.flex = ratio + ' 1 0%';
 	});
+}
+gallery();
 
-	/* ==========================================================================
-	   Gallery
-	   ========================================================================== */
+/* ==========================================================================
+		Style code blocks with highlight and numbered lines
+		========================================================================== */
 
-	function gallery() {
-		var images = document.querySelectorAll('.kg-gallery-image img');
-		images.forEach(function (image) {
-			var container = image.closest('.kg-gallery-image');
-			var width = image.attributes.width.value;
-			var height = image.attributes.height.value;
-			var ratio = width / height;
-			container.style.flex = ratio + ' 1 0%';
-		});
-	}
-	gallery();
+function codestyling() {
+	document.querySelectorAll('pre code').forEach(function(code) {
+		hljs.highlightBlock(code);
 
-	/* ==========================================================================
-	   Style code blocks with highlight and numbered lines
-	   ========================================================================== */
+		if (!code.classList.contains('language-text')) {
+			var lines = code.innerHTML.split(/\n/).length;
+			var numbers = [];
 
-	function codestyling() {
-		$('pre code').each(function(i, e) {
-			hljs.highlightBlock(e);
-
-			if(!$(this).hasClass('language-text')) {
-				var code = $(this);
-				var lines = code.html().split(/\n/).length;
-				var numbers = [];
-				for (i = 1; i < lines; i++) {
-					numbers += '<span class="line">' + i + '</span>';
-				}
-				code.parent().append('<div class="lines">' + numbers + '</div>');
+			for (i = 1; i < lines; i++) {
+				numbers += '<span class="line">' + i + '</span>';
 			}
-		});
-	}
-	codestyling();
 
-	/* ==========================================================================
-	   Responsive Videos with Fitvids
-	   ========================================================================== */
+			code.parentElement.innerHTML = '<div class="lines">' + numbers + '</div>';
+		}
+	});
+}
+codestyling();
 
-	function video() {
-		$('#wrapper').fitVids();
-	}
-	video();
+/* ==========================================================================
+		Responsive Videos with Fitvids
+		========================================================================== */
 
-	/* ==========================================================================
-	   Initialize and load Disqus
-	   ========================================================================== */
+function video() {
+	reframe('iframe')
+}
+video();
 
-	if (typeof disqus === 'undefined') {
-		$('.post-comments').css({
-			'display' : 'none'
-		});
-	} else {
-		$('#show-disqus').on('click', function() {
-			$.ajax({
-				type: "GET",
-				url: "//" + disqus + ".disqus.com/embed.js",
-				dataType: "script",
-				cache: true
-			});
-			$(this).parent().addClass('activated');
-		});
-	}
-});
+/* ==========================================================================
+	 Initialize and load Disqus
+	 ========================================================================== */
+
+disqus = 'pzuraq';
+
+if (typeof disqus === 'undefined') {
+	document.querySelector('.post-comments').style['display'] = 'none';
+} else {
+	document.querySelector('#show-disqus').addEventListener('click', function() {
+		var script = document.createElement('script');
+		script.async = true;
+		script.src = '//' + disqus + '.disqus.com/embed.js';
+		document.body.appendChild(script);
+	});
+}
