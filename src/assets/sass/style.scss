@@ -8,6 +8,7 @@
 @import "code";
 @import "icons";
 @import "fonts";
+@import "likes";
 
 /* ==========================================================================
    Basics
@@ -517,6 +518,15 @@ img[src$="#full"] {
 	font-weight: inherit;
 	color: inherit;
 }
+.blog-subtitle {
+	position: relative;
+	display: block;
+	z-index: 10;
+	margin: 0.25em 0;
+	padding: 0;
+	font-size: 1.5em;
+	line-height: 1.5em;
+}
 .blog-description {
 	position: relative;
 	display: block;
@@ -527,7 +537,7 @@ img[src$="#full"] {
 	line-height: 1.5em;
 }
 .home-template .blog-description {
-	font-size: 1.5em;
+	color: $color-blue-60;
 }
 .has-cover .blog-description {
 	color: $color-white;
@@ -999,7 +1009,7 @@ img[src$="#full"] {
 	margin: 0.5em 0 0;
 }
 .post-content {
-  padding: 2em 0;
+  padding: 2em 0 1em;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1029,74 +1039,77 @@ img[src$="#full"] {
    Post Info
    ========================================================================== */
 
-.post-info {
-	margin-top: 2em;
-	overflow: hidden;
+.post-buttons {
+	display: flex;
+	align-items: center;
+	margin: 0 1.55em 2em;
 }
+
+.post-links {
+	flex-grow: 1;
+	text-align: right;
+	margin-top: 1em;
+	margin-right: 0.5em;
+}
+
 .post-share {
-	max-width: 25%;
-	float: right;
+	a {
+		display: inline-block;
+		width: 1.7em;
+		height: 1.7em;
+		margin-left: 0.333em;
+		padding: 0;
+		font-size: 0.75em;
+		line-height: 1.8em;
+		text-align: center;
+		text-decoration: none;
+		border-radius: 2px;
+		transition: all ease 0.3s;
+
+		color: $color-white;
+		background-color: $color-blue-80;
+
+		&:hover,
+		&:focus {
+			background-color: $color-blue-15;
+		}
+
+		i {
+			color: inherit;
+		}
+
+		i:before {
+			width: auto;
+			height: auto;
+		}
+	}
 }
-.post-share a {
-	display: block;
-	width: 2em;
-	height: 2em;
-	margin: 0.334em 0 0.334em 0.667em;
-	padding: 0;
-	float: left;
-	font-size: 0.75em;
-	line-height: 2em;
-	text-align: center;
-	text-decoration: none;
-	color: $color-white;
-	border-radius: 2px;
-	transition: all ease 0.3s;
-}
-.post-share a:hover,
-.post-share a:focus {
-	background-color: $color-blue-15;
-}
-.post-share a i {
-	color: inherit;
-}
-.post-share a i:before {
-	width: auto;
-	height: auto;
-}
-.post-share .twitter {
-	background-color: $color-social-twitter;
-}
-.post-share .facebook {
-	background-color: $color-social-facebook;
-}
-.post-share .googleplus {
-	background-color: $color-social-googleplus;
-}
+
 .post-tags {
-	max-width: 75%;
-	float: left;
 	font-family: 'Fira Sans', sans-serif;
-}
-.post-tags a {
-	display: inline-block;
-	margin: 0 0.334em 0.667em 0;
-	padding: 0.575em 1em;
-	background: $color-white;
-	border: 1px solid $primary-color;
-	font-size: 0.75em;
-	font-weight: 500;
-	line-height: 1.334em;
-	text-align: center;
-	text-decoration: none;
-	color: $primary-color;
-	border-radius: 2em;
-	transition: all ease 0.3s;
-	box-sizing: border-box;
-}
-.post-tags a:hover,
-.post-tags a:focus {
-	background: $primary-color;
-	color: $color-white;
+
+	a {
+		display: inline-block;
+		margin: 0 0 0.667em 0.334em;
+		padding: 0.575em 1em;
+		background: $color-white;
+		border: 1px solid $color-blue-60;
+		font-size: 0.75em;
+		font-weight: 500;
+		line-height: 1.334em;
+		text-align: center;
+		text-decoration: none;
+		color: $color-blue-60;
+		border-radius: 2em;
+		transition: all ease 0.3s;
+		box-sizing: border-box;
+
+		&:hover,
+		&:focus {
+			background: $color-blue-60;
+			color: $color-white;
+		}
+	}
 }
 
 /* ==========================================================================
@@ -1498,16 +1511,6 @@ img[src$="#full"] {
 	html {
 	    font-size: 50%;
 	}
-	.post-share,
-	.post-tags {
-		max-width: none;
-		float: none;
-		margin: 0 0 2em;
-	}
-	.post-share a {
-		margin-left: 0;
-		margin-right: 0.667em;
-	}
 	.post-nav i {
 		font-size: 1.5em;
 	}
@@ -1536,6 +1539,17 @@ img[src$="#full"] {
 	.post-content .fluid-width-video-wrapper {
 		width: 100%;
 		margin-left: auto;
+	}
+	.post-buttons {
+		// aligns the like button with the author avatar
+		margin: 0;
+
+		.post-like {
+			margin-left: -0.18em
+		}
+	}
+	.post-author {
+		padding-left: 0.35em;
 	}
 	.post-nav:after {
 		display: none;

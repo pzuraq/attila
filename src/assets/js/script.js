@@ -115,7 +115,7 @@ Prism.hooks.add('complete', function (env) {
 
 
 /* ==========================================================================
-	 Responsive Videos with Fitvids
+	 Responsive Videos with Reframe
 	 ========================================================================== */
 
 function video() {
