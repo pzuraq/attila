@@ -125,7 +125,7 @@ reframe('iframe')
 	 Like Button
 	 ========================================================================== */
 
-let likeApi = 'https://blog-likes.azurewebsites.net/api/likes/pzuraq-';
+let likeApi = 'https://blog-likes.azurewebsites.net/api/likes/www-pzuraq-com-';
 let likeCheckbox = document.querySelector('#like');
 let likeText = document.querySelector('#like-text');
 
