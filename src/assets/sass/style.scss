@@ -1042,13 +1042,13 @@ img[src$="#full"] {
 .post-buttons {
 	display: flex;
 	align-items: center;
-	margin: 0 1.55em 2em;
+	margin: 0 1.55em -0.4em;
 }
 
 .post-links {
 	flex-grow: 1;
 	text-align: right;
-	margin-top: 1em;
+	margin-top: 0.75em;
 	margin-right: 0.5em;
 }
 
@@ -1542,7 +1542,7 @@ img[src$="#full"] {
 	}
 	.post-buttons {
 		// aligns the like button with the author avatar
-		margin: 0;
+		margin: 0 0 -0.4em;
 
 		.post-like {
 			margin-left: -0.18em

@@ -4,6 +4,8 @@ import reframe from 'reframe.js';
 // bootstrap styles
 import '../sass/style.scss';
 
+let localStorage = window.localStorage;
+
 let body = document.querySelector('body');
 let html = document.querySelector('html');
 
@@ -11,16 +13,13 @@ let html = document.querySelector('html');
 	 Menu
 	 ========================================================================== */
 
-function menu() {
-	let menuElements = document.querySelectorAll('#menu, .menu-button, .hidden-close');
+let menuElements = document.querySelectorAll('#menu, .menu-button, .hidden-close');
 
-	menuElements.forEach(function(menuElement) {
-		menuElement.addEventListener('click', () => {
-			html.classList.toggle('menu-active')
-		});
+menuElements.forEach(function(menuElement) {
+	menuElement.addEventListener('click', () => {
+		html.classList.toggle('menu-active')
 	});
-}
-menu();
+});
 
 /* ==========================================================================
 	 Parallax cover
@@ -87,6 +86,7 @@ if (progressBar) {
 
 function gallery() {
 	let images = document.querySelectorAll('.kg-gallery-image img');
+
 	images.forEach(function (image) {
 		let container = image.closest('.kg-gallery-image');
 		let width = image.attributes.width.value;
@@ -118,33 +118,69 @@ Prism.hooks.add('complete', function (env) {
 	 Responsive Videos with Reframe
 	 ========================================================================== */
 
-function video() {
-	reframe('iframe')
-}
-video();
+reframe('iframe')
+
 
 /* ==========================================================================
-	 Initialize and load Disqus
+	 Like Button
 	 ========================================================================== */
 
-if (typeof window.disqus === 'undefined') {
-	let postComments = document.querySelector('.post-comments');
+let likeApi = 'https://blog-likes.azurewebsites.net/api/likes/pzuraq-';
+let likeCheckbox = document.querySelector('#like');
+let likeText = document.querySelector('#like-text');
 
-	if (postComments) {
-		postComments.style['display'] = 'none';
+function getLikeText(likes) {
+	switch (likes) {
+		case 0: return 'No likes yet :(';
+		case 1: return '1 like';
+		default: return `${likes} likes`;
 	}
-} else {
-	let disqusButton = document.querySelector('#show-disqus');
+}
 
-	if (disqusButton) {
-		disqusButton.addEventListener('click', function() {
-			// create and append a script tag to load the disqus embed script
-			let script = document.createElement('script');
-			script.async = true;
-			script.src = '//' + disqus + '.disqus.com/embed.js';
-			document.body.appendChild(script);
-
-			disqusButton.style['display'] = 'none';
+function likeRequest(method, postname, callback) {
+	return fetch(`${likeApi}${postname}`, { method })
+		.then(r => r.json())
+		.then((response) => {
+			if (response.error) {
+				likeText.classList.remove('fade-in');
+				likeText.innerText = 'Something went wrong :('
+				likeCheckbox.removeAttribute('checked');
+				likeCheckbox.setAttribute('disabled', 'disabled');
+			} else {
+				callback(response)
+			}
 		});
+}
+
+function addLike(postname) {
+	likeText.classList.add('fade-in');
+	likeText.innerText = '&nbsp;';
+	likeCheckbox.setAttribute('checked', 'checked');
+	likeCheckbox.setAttribute('disabled', 'disabled');
+
+	likeRequest('POST', postname, ({ likes }) => {
+		localStorage.setItem(`blog-likes/liked/${postname}`, 'true');
+		likeText.classList.remove('fade-in');
+		likeText.innerText = getLikeText(likes);
+	});
+}
+
+if (likeCheckbox) {
+	let postname = window.location.pathname.match(/\/([^/]*?)\/?$/)[1];
+
+	let hasLikedPost = localStorage.getItem(`blog-likes/liked/${postname}`);
+
+	if (hasLikedPost) {
+		likeCheckbox.setAttribute('checked', 'checked');
+		likeCheckbox.setAttribute('disabled', 'disabled');
 	}
+
+	likeRequest('GET', postname, ({ likes }) => {
+		likeText.classList.remove('fade-in');
+		likeText.innerText = getLikeText(likes);
+
+		if (!hasLikedPost) {
+			likeCheckbox.addEventListener('change', () => addLike(postname));
+		}
+	});
 }
