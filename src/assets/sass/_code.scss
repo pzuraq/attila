@@ -18,11 +18,11 @@ $code-colors: (
 
 code {
 	font-size: 0.75em;
-  padding: 0.334em 0.667em;
 }
 
 pre {
 	margin: 0 0 2em;
+	line-height: 1.2em;
 }
 
 code,
@@ -50,17 +50,16 @@ pre code[class*='language-'] {
 	font-family: monospace, sans-serif;
   white-space: pre;
   background: map-get($code-colors, light-gray);
-  padding: 1.2em;
+  padding: 1em 1.4em;
   overflow-x: auto;
 }
 
 // inline code
 :not(pre) > code {
   border: 1px solid map-get($code-colors, medium-gray);
-  margin: 0 0.334em;
-	padding: 0.334em 0.667em;
-  position: relative;
-  top: -2px;
+	padding: 0.25em 0.5em;
+	position: relative;
+	top: -0.1em;
 }
 
 
@@ -139,7 +138,7 @@ pre[class*="language-"].line-numbers > code {
 	pointer-events: none;
   top: 0;
 	left: 0;
-  padding: 1.2em 0;
+  padding: 1em 0;
 	width: 3em; /* works for line-numbers below 1000 lines */
 	letter-spacing: -1px;
   border-right: 1px solid map-get($code-colors, medium-gray);
